@@ -1,13 +1,13 @@
 @extends('admin.admin')
-@section('title', 'Category')
+@section('title', 'Product')
 @section('content-title')
 <div class="row mb-2">
     <div class="col-sm-6">
-      <h1 class="m-0">Category</h1>
+      <h1 class="m-0">Product</h1>
     </div><!-- /.col -->
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item active">Category</li>
+        <li class="breadcrumb-item active">Product</li>
       </ol>
     </div><!-- /.col -->
 </div><!-- /.row -->
@@ -34,10 +34,10 @@
             
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Category</h3>
+                    <h3 class="card-title">Product</h3>
 
                     <div class="card-tools">
-                        <a href="{{ url('admin/category/create') }}" class="btn btn-tool">
+                        <a href="{{ route('product.create') }}" class="btn btn-tool">
                             <i class="fas fa-plus"></i>
                             Add data
                         </a>
@@ -49,39 +49,54 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Category</th>
                                 <th>Name</th>
+                                <th>Price</th>
+                                <th>SKU</th>
+                                <th>Image</th>
                                 <th>Status</th>
                                 <th style="width: 100px">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($categories as $category)
+                            @foreach ($products as $product)
                                 <tr>
-                                    <td>{{ $category->id }}</td>
-                                    <td>{{ $category->name }}</td>
-                                    <td>{{ $category->status }}</td>
+                                    <td>{{ $product->id }}</td>
+                                    <td>{{ $product->getCategory->name }}</td>
+                                    <td>{{ $product->name }}</td>
+                                    <td>{{ $product->price }}</td>
+                                    <td>{{ $product->sku }}</td>
                                     <td>
-                                        <form action="{{ route('category.destroy', ['category' => $category->id]) }}" method="post">
-                                            @csrf
-                                            @method('delete')
+                                        @if (!empty($product->image))
+                                            <img src="{{ asset('storage/product/' . $product->image) }}" height="100" alt="">
+                                        @else
+                                            Tidak ada gambar
+                                        @endif
+                                    </td>
+                                    <td>{{ $product->status }}</td>
+                                    <td>
+                                        {{ Form::open(['route' => ['product.destroy', $product->id], 'method' => 'delete']) }}
                                             <div class="btn-group">
-                                                <a href="{{ url('admin/category/' . $category->id) }}" class="btn btn-info">
+                                                <a href="{{ route('product.show', ['product' => $product->id]) }}" class="btn btn-info">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="{{ url('/admin/category/' . $category->id . '/edit') }}" class="btn btn-warning">
+                                                <a href="{{ route('product.edit', ['product', $product->id]) }}" class="btn btn-warning">
                                                     <i class="fas fa-pen"></i>
                                                 </a>
                                                 <button type="submit" class="btn btn-danger">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>
-                                        </form>
+                                        {{ Form::close() }}
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
 
+                </div>
+                <div class="card-footer">
+                    {{ $products->links() }}
                 </div>
             </div>
 

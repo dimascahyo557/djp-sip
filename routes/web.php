@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,3 +29,9 @@ Route::get('/admin', [DashboardController::class, 'index']);
 Route::get('/admin/category/create', [CategoryController::class, 'create']);
 Route::post('/admin/category', [CategoryController::class, 'store']);
 Route::get('/admin/category', [CategoryController::class, 'index']);
+Route::get('/admin/category/{category}', [CategoryController::class, 'show']);
+Route::get('/admin/category/{category}/edit', [CategoryController::class, 'edit']);
+Route::put('/admin/category/{category}', [CategoryController::class, 'update']);
+Route::delete('/admin/category/{category}/delete', [CategoryController::class, 'destroy'])->name('category.destroy');
+
+Route::resource('admin/product', ProductController::class);

@@ -42,7 +42,7 @@
                 </a>
             </li>
           <li class="nav-item menu-open">
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link @if(Request::is('admin/category*')) active @endif">
               <i class="nav-icon fas fa-folder-open"></i>
               <p>
                 Data
@@ -51,7 +51,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ url('admin/category') }}" class="nav-link @if(Request::is('admin/category*')) active @endif">
                   <i class="fas fa-book nav-icon"></i>
                   <p>Category</p>
                 </a>
