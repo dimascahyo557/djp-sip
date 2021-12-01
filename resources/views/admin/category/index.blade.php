@@ -17,16 +17,16 @@
         <div class="col">
 
             @if (session('success'))
-                <div class="alert alert-success">
+                <div class="alert alert-success alert-dismissible fade show">
                     {{ session('success') }}
-                    <button type="button" class="close" data-dismis="alert">
+                    <button type="button" class="close" data-dismiss="alert">
                         <span>&times;</span>
                     </button>
                 </div>
             @elseif (session('failed'))
-                <div class="alert alert-success">
+                <div class="alert alert-success alert-dismissible fade show">
                     {{ session('failed') }}
-                    <button type="button" class="close" data-dismis="alert">
+                    <button type="button" class="close" data-dismiss="alert">
                         <span>&times;</span>
                     </button>
                 </div>

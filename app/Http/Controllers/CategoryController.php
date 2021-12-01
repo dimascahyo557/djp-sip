@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -105,6 +106,18 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
+        $products = $category->products;
+
+        // hapus data product
+        foreach ($products as $product) {
+            // hapus gambar
+            if (!empty($product->image) && Storage::exists('public/product/' . $product->image)) {
+                Storage::delete('public/product/' . $product->image);
+            }
+
+            $product->delete();
+        }
+
         $result = $category->delete();
 
         if ($result) {

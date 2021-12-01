@@ -25,4 +25,9 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'product_id', 'id');
+    }
 }

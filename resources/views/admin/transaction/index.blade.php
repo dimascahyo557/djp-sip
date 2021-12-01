@@ -1,13 +1,13 @@
 @extends('admin.admin')
-@section('title', 'Dashboard')
+@section('title', 'Sales')
 @section('content-title')
 <div class="row mb-2">
     <div class="col-sm-6">
-      <h1 class="m-0">Dashboard</h1>
+      <h1 class="m-0">Sales</h1>
     </div><!-- /.col -->
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item active">Dashboard</li>
+        <li class="breadcrumb-item active">Sales</li>
       </ol>
     </div><!-- /.col -->
 </div><!-- /.row -->
@@ -15,22 +15,36 @@
 @section('content')
     <div class="row">
         <div class="col">
+
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show">
+                    {{ session('success') }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span>&times;</span>
+                    </button>
+                </div>
+            @elseif (session('failed'))
+                <div class="alert alert-success alert-dismissible fade show">
+                    {{ session('failed') }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span>&times;</span>
+                    </button>
+                </div>
+            @endif
+            
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Sales Graph</h3>
+                    <h3 class="card-title">Sales</h3>
+
+                    <div class="card-tools">
+                        <a href="{{ route('transaction.create') }}" class="btn btn-tool">
+                            <i class="fas fa-plus"></i>
+                            Add data
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body">
-                    Sales graph here
-                    <br><br><br><br>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Latest Transaction</h3>
-                </div>
-                <div class="card-body">
+                    
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -51,8 +65,13 @@
                             @endforeach
                         </tbody>
                     </table>
+
+                </div>
+                <div class="card-footer">
+                    {{ $transactions->links() }}
                 </div>
             </div>
+
         </div>
     </div>
 @endsection

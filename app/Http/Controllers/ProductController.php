@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -13,10 +14,33 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::paginate(3);
-        return view('admin.product.index', ['products' => $products]);
+        // mengambil query string (yang ada di url)
+        $category = $request->query('category');
+        $search = $request->query('search');
+
+        // persiapan query ke database
+        $query = Product::query();
+
+        if (!empty($category)) {
+            $query->where('category_id', $category);
+        }
+
+        if (!empty($search)) {
+            $query->where('name', 'like', '%' . $search . '%')
+                ->orWhere('price', 'like', '%' . $search . '%')
+                ->orWhere('sku', 'like', '%' . $search . '%');
+        }
+
+        $products = $query->paginate(2);
+        $categories = Category::pluck('name', 'id');
+        return view('admin.product.index', [
+            'products' => $products,
+            'categories' => $categories,
+            'filterSearch' => $search,
+            'filterCategory' => $category,
+        ]);
     }
 
     /**
@@ -76,9 +100,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($product)
+    public function show(Product $product)
     {
-        //
+        return view('admin.product.show', ['product' => $product]);
     }
 
     /**
@@ -87,9 +111,10 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Product $product)
     {
-        //
+        $categories = Category::pluck('name', 'id');
+        return view('admin.product.edit', ['product' => $product, 'categories' => $categories]);
     }
 
     /**
@@ -99,9 +124,44 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
-        //
+        $inputs = $request->all();
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'name' => 'required',
+            'price' => 'required|numeric',
+            'sku' => 'required',
+            'status' => 'required|in:active,inactive',
+            'image' => 'nullable|image',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            if ($image->isValid()) {
+
+                // hapus gambar
+                if (!empty($product->image) && Storage::exists('public/product/' . $product->image)) {
+                    Storage::delete('public/product/' . $product->image);
+                }
+
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('public/product', $imageName);
+                $inputs['image'] = $imageName;
+            } else {
+                unset($inputs['image']);
+            }
+        } else {
+            unset($inputs['image']);
+        }
+
+        $result = $product->update($inputs);
+
+        if ($result) {
+            return redirect()->route('product.index')->with('success', 'Update data success!');
+        } else {
+            return redirect()->route('product.index')->with('failed', 'Update data failed!');
+        }
     }
 
     /**
@@ -110,8 +170,19 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        //
+        // hapus gambar
+        if (!empty($product->image) && Storage::exists('public/product/' . $product->image)) {
+            Storage::delete('public/product/' . $product->image);
+        }
+
+        $result = $product->delete();
+
+        if ($result) {
+            return redirect()->route('product.index')->with('success', 'Delete data success!');
+        } else {
+            return redirect()->route('product.index')->with('failed', 'Delete data failed!');
+        }
     }
 }

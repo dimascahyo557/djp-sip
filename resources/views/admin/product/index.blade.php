@@ -17,16 +17,16 @@
         <div class="col">
 
             @if (session('success'))
-                <div class="alert alert-success">
+                <div class="alert alert-success alert-dismissible fade show">
                     {{ session('success') }}
-                    <button type="button" class="close" data-dismis="alert">
+                    <button type="button" class="close" data-dismiss="alert">
                         <span>&times;</span>
                     </button>
                 </div>
             @elseif (session('failed'))
-                <div class="alert alert-success">
+                <div class="alert alert-success alert-dismissible fade show">
                     {{ session('failed') }}
-                    <button type="button" class="close" data-dismis="alert">
+                    <button type="button" class="close" data-dismiss="alert">
                         <span>&times;</span>
                     </button>
                 </div>
@@ -44,6 +44,21 @@
                     </div>
                 </div>
                 <div class="card-body">
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                {{ Form::label('category') }}
+                                {{ Form::select('category', $categories, $filterCategory, ['class' => 'form-control', 'placeholder' => 'Choose category']) }}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                {{ Form::label('search') }}
+                                {{ Form::text('search', $filterSearch, ['class' => 'form-control', 'placeholder' => 'Search']) }}
+                            </div>
+                        </div>
+                    </div>
                     
                     <table class="table table-bordered">
                         <thead>
@@ -80,7 +95,7 @@
                                                 <a href="{{ route('product.show', ['product' => $product->id]) }}" class="btn btn-info">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="{{ route('product.edit', ['product', $product->id]) }}" class="btn btn-warning">
+                                                <a href="{{ route('product.edit', ['product' => $product->id]) }}" class="btn btn-warning">
                                                     <i class="fas fa-pen"></i>
                                                 </a>
                                                 <button type="submit" class="btn btn-danger">
@@ -96,10 +111,33 @@
 
                 </div>
                 <div class="card-footer">
-                    {{ $products->links() }}
+                    {{ $products->appends($_GET)->links() }}
                 </div>
             </div>
 
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+
+        var filter = function() {
+            var category = $('#category').val();
+            var search = $('#search').val();
+
+            window.location.replace("{{ route('product.index') }}?category=" + category + "&search=" + search);
+        }
+
+        $('#category').on('change', function() {
+            filter();
+        });
+
+        $('#search').keypress(function (event) {
+            if(event.keyCode == 13) {
+                filter();
+            }
+        });
+
+    </script>
 @endsection

@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,3 +36,7 @@ Route::put('/admin/category/{category}', [CategoryController::class, 'update']);
 Route::delete('/admin/category/{category}/delete', [CategoryController::class, 'destroy'])->name('category.destroy');
 
 Route::resource('admin/product', ProductController::class);
+
+Route::get('/admin/transaction', [TransactionController::class, 'index'])->name('transaction.index');
+Route::get('/admin/transaction/create', [TransactionController::class, 'create'])->name('transaction.create');
+Route::post('/admin/transaction', [TransactionController::class, 'import'])->name('transaction.import');
