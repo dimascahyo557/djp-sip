@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TransactionExport;
 use App\Imports\TransactionImport;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -29,5 +30,10 @@ class TransactionController extends Controller
         Excel::import(new TransactionImport(), $request->file('import'));
 
         dd('Berhasil di import');
+    }
+
+    public function export()
+    {
+        return Excel::download(new TransactionExport, 'transaction.xlsx');
     }
 }

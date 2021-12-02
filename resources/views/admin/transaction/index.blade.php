@@ -41,6 +41,10 @@
                             <i class="fas fa-plus"></i>
                             Add data
                         </a>
+                        <a href="{{ route('transaction.export') }}" class="btn btn-tool">
+                            <i class="fas fa-download"></i>
+                            Export
+                        </a>
                     </div>
                 </div>
                 <div class="card-body">

@@ -73,6 +73,16 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            {{ Form::open(['route' => 'logout', 'method' => 'post']) }}
+            <button type="submit" class="nav-link">
+              <i class="nav-icon fas fa-door-open"></i>
+              <p>
+                Logout
+              </p>
+            </button>
+            {{ Form::close() }}
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
