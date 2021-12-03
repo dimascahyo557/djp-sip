@@ -9,6 +9,69 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthApiController extends Controller
 {
+
+    /**
+     *  @OA\Post(
+     *      path="/api/register",
+     *      operationId="register",
+     *      summary="Register",
+     *      description="Register new user",
+     *      tags={"Authetication"},
+     *      @OA\RequestBody(
+     *          @OA\MediaType(
+     *              mediaType="application/x-www-form-urlencoded",
+     *              @OA\Schema(
+     *                  @OA\Property(
+     *                      property="name",
+     *                      description="Name",
+     *                      type="string",
+     *                  ),
+     *                  @OA\Property(
+     *                      property="email",
+     *                      description="User Email",
+     *                      type="string",
+     *                  ),
+     *                  @OA\Property(
+     *                      property="password",
+     *                      description="Password",
+     *                      type="string",
+     *                  ),
+     *              ),
+     *          ),
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *              @OA\Schema(
+     *                  @OA\Property(
+     *                      property="name",
+     *                      description="Name",
+     *                      type="string",
+     *                  ),
+     *                  @OA\Property(
+     *                      property="email",
+     *                      description="User Email",
+     *                      type="string",
+     *                  ),
+     *                  @OA\Property(
+     *                      property="password",
+     *                      description="Password",
+     *                      type="string",
+     *                  ),
+     *              ),
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *          @OA\MediaType(
+     *              mediaType="application/json"
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation error",
+     *      ),
+     *  )
+     */
     public function register(Request $request)
     {
         $request->validate([
@@ -44,6 +107,58 @@ class AuthApiController extends Controller
 
     }
 
+    /**
+     *  @OA\Post(
+     *      path="/api/login",
+     *      operationId="login",
+     *      summary="Login",
+     *      description="Login to the application",
+     *      tags={"Authetication"},
+     *      @OA\RequestBody(
+     *          @OA\MediaType(
+     *              mediaType="application/x-www-form-urlencoded",
+     *              @OA\Schema(
+     *                  @OA\Property(
+     *                      property="email",
+     *                      description="User Email",
+     *                      type="string",
+     *                  ),
+     *                  @OA\Property(
+     *                      property="password",
+     *                      description="Password",
+     *                      type="string",
+     *                  ),
+     *              ),
+     *          ),
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *              @OA\Schema(
+     *                  @OA\Property(
+     *                      property="email",
+     *                      description="User Email",
+     *                      type="string",
+     *                  ),
+     *                  @OA\Property(
+     *                      property="password",
+     *                      description="Password",
+     *                      type="string",
+     *                  ),
+     *              ),
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *          @OA\MediaType(
+     *              mediaType="application/json"
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation error",
+     *      ),
+     *  )
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -71,6 +186,29 @@ class AuthApiController extends Controller
         }
     }
 
+    /**
+     *  @OA\Post(
+     *      path="/api/logout",
+     *      operationId="logout",
+     *      summary="Logout",
+     *      description="Logout",
+     *      tags={"Authetication"},
+     *      security={
+     *          {"api_key": {}}
+     *      },
+     *      @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *          @OA\MediaType(
+     *              mediaType="application/json"
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *  )
+     */
     public function logout()
     {
         auth()->user()->token()->revoke();

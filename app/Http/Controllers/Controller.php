@@ -27,5 +27,9 @@ class Controller extends BaseController
      *      url=L5_SWAGGER_CONST_HOST,
      *      description="Url from config file"
      *  )
+     *  @OA\Server(
+     *      url="https://google.com",
+     *      description="Production url"
+     *  )
      */
 }

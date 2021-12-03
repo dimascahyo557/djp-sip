@@ -29,7 +29,9 @@ class TransactionController extends Controller
 
         Excel::import(new TransactionImport(), $request->file('import'));
 
-        dd('Berhasil di import');
+        return redirect()
+            ->route('transaction.index')
+            ->with('success', 'Import data success');
     }
 
     public function export()
